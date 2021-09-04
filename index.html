@@ -1,0 +1,155 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>SecureChat</title>
+</head>
+
+<body>
+
+  <!-- Modal for generating Unique Key -->
+
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Unique Key</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12" id="id_form">
+              <div class="mb-3">
+                <label for="nick_name" class="form-label">Your nick name</label>
+                <input type="email" class="form-control" id="nick_name" aria-describedby="emailHelp">
+              </div>
+              <button id="generate_unique_key"class="btn btn-primary">
+                <span style="visibility: hidden;" id="generate_unique_key_loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Submit
+              </button>
+            </div>
+            <div class="row" id="unique_key_container" style="display: none">
+              <div class="col-12" style="overflow-wrap: break-word;">
+                Your key: <span id="unique_key"></span>
+              </div>
+              <div class="col-12" style="padding-top: 15px; text-align: center;">
+                <button id="clear_unique_key"class="btn btn-danger">
+                  <span style="visibility: hidden;" id="clear_unique_key_loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Forcefully clear the key from the session
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12" style="font-size: 10px; padding-top: 15px">
+                **Please remeber this unique key as it is used to verify your identity, later, when you would like to
+                retrieve your saved messages.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for retrieving the saved messages using the key entered -->
+
+  <div class="modal fade" id="staticBackdropOne" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Enter your previously issued key</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12" id="fetch_chat_form">
+              <div class="mb-3">
+                <label for="previous_key" class="form-label">Your key</label>
+                <input type="email" class="form-control" id="previous_key" aria-describedby="emailHelp">
+              </div>
+              <button id="fetch_chat" class="btn btn-primary">
+                <span style="visibility: hidden;" id="fetch_chat_loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Submit
+              </button>
+            </div>
+            <div class="row" id="chats_container" style="display: none">
+              <div class="col-12">
+                Your saved chats:- <span id="saved_chats_list"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12" style="text-align: center;">
+        <h1>SecureChat</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-lg-6" style="text-align: center; padding-top: 25px">
+        <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-primary">Get your unique
+          key</button>
+      </div>
+      <div class="col-12 col-lg-6" style="text-align: center; padding-top: 25px">
+        <button id="fetch_chat_modal" data-bs-toggle="modal" data-bs-target="#staticBackdropOne" class="btn btn-primary">Retrieve your saved messages</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12" style="text-align: center;">
+          <button id="start_chatting" class="btn btn-primary">
+            <span style="visibility: hidden;" id="start_chatting_loader" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Start chatting
+          </button>
+      </div>
+      <div class="col-12" id="receiver-id">
+        
+      </div>
+      <div class="col-12" id="status">
+
+      </div>
+      <div class="col-12" id="link_data" style="display: none">
+        <div>Copy and share the link with other user to start chatting securely.</div>
+        <div>
+          <input type="text" style="width: 500px" id="chat_link" readonly>
+          <img data-clipboard-target="#chat_link" src="./assets/copy_icon.png" style="height: 20px; width: 20px; cursor: pointer" alt="copy_icon">
+        </div>
+      </div>
+      <div class="col-12">
+        <input type="text" id="sendMessageBox">
+        <button class="btn btn-primary" id="sendButton">Send</button>
+        <button class="btn btn-danger" id="clearMsgsButton">Clear all messages</button>
+      </div>
+
+      <div id="chat_messages">
+
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-firestore.js"></script>
+  <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+  <script src="./js/encrypt.js"></script>
+  <script src="./js/firebase.js"></script>
+  <script src="./js/peer.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
